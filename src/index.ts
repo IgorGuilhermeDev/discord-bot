@@ -3,6 +3,7 @@ import "dotenv/config";
 import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 import { commands } from "./commands/index.js";
 import type { SlashCommand } from "./types.js";
+import { registerRegistrationFlow } from "./events/registrationFlowModal.js";
 
 const token = process.env.DISCORD_TOKEN;
 
@@ -10,7 +11,9 @@ if (!token) {
   throw new Error("DISCORD_TOKEN is missing");
 }
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] });
+registerRegistrationFlow(client);
+
 const commandMap = new Collection<string, SlashCommand>();
 
 for (const command of commands) {
